@@ -1,19 +1,24 @@
 <script>
+	import items from '$lib/todoItems.js'
 	import TodoList from '$lib/TodoList.svelte'
-
-	const todoItems = [
-		{ name: 'Buy Groceries', isDone: false, id: crypto.randomUUID() },
-		{ name: 'Do Laundry', isDone: true, id: crypto.randomUUID() },
-		{ name: 'Learn JS', isDone: false, id: crypto.randomUUID() },
-	]
+	// import Typewriter from '$lib/Typewriter.svelte'
 </script>
 
 <section>
 	<div class="outer">
 		<div class="inner auto-fill">
 			<TodoList title="My List"></TodoList>
-			<TodoList title="Your List" items={todoItems}></TodoList>
-			<!-- <TodoList></TodoList> -->
+			<TodoList title="Your List" {items}></TodoList>
+			<TodoList></TodoList>
 		</div>
 	</div>
 </section>
+
+<!-- <section>
+	<div class="outer">
+		<div class="inner">
+			<Typewriter message="Hello, World!" speed="200"></Typewriter>
+			<Typewriter></Typewriter>
+		</div>
+	</div>
+</section> -->

@@ -26,7 +26,6 @@
 		const form = event.target
 		const formData = new FormData(form)
 		const newTodo = formData.get('todo-list').trim()
-		console.log(newTodo)
 		if (newTodo) {
 			addTodo(newTodo)
 		}
