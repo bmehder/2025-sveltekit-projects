@@ -1,89 +1,101 @@
 /* CSS Custom properties */
 :root {
-	color-scheme: dark light;
-	--lg: 70rem;
+  color-scheme: dark light;
+  --lg: 70rem;
 }
 
 /* Resets */
-* {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
-	/* outline: 1px solid red; */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  /* outline: 1px solid red; */
 }
 
 img {
-	display: block;
-	width: 100%;
-	height: auto;
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 h1,
 h2,
 h3 {
-	text-wrap: balance;
+  text-wrap: balance;
 }
 
 p,
 li {
-	max-width: 65ch;
-	text-wrap: pretty;
+  max-width: 65ch;
+  text-wrap: pretty;
 }
 
 /* Typography */
 body {
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-		Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-	font-size: 1rem;
-	line-height: 1.6;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 /* Layouts */
 .flow > * + * {
-	margin-top: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .inner {
-	width: min(100% - 3rem, var(--lg));
-	margin-inline: auto;
-	padding-block: 3rem;
+  width: min(100% - 3rem, var(--lg));
+  margin-inline: auto;
+  padding-block: 3rem;
 }
 
 .auto-fit {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
-	gap: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: 3rem;
 }
 
 .auto-fill {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
-	gap: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+  gap: 3rem;
 }
 
 .spread-apart {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	align-items: center;
-	gap: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .columns {
-	column-width: 20rem;
-	gap: 3rem;
+  column-width: 20rem;
+  gap: 3rem;
 }
 
 .float-left {
-	width: auto;
-	float: inline-start;
-	margin-inline-end: 3rem;
-	margin-block-end: 1.5rem;
+  width: auto;
+  float: inline-start;
+  margin-inline-end: 3rem;
+  margin-block-end: 1.5rem;
 }
 
 .float-right {
-	width: auto;
-	float: inline-end;
-	margin-inline-start: 3rem;
-	margin-block-end: 1.5rem;
+  width: auto;
+  float: inline-end;
+  margin-inline-start: 3rem;
+  margin-block-end: 1.5rem;
 }
