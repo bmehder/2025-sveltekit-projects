@@ -1,10 +1,10 @@
-<script>
-  const handleMousemove = (event) => {
+<script lang="ts">
+  const handleMousemove = (event: MouseEvent) => {
     const eyes = document.querySelectorAll(".eye");
 
-    const callbackFn = (eye) => {
-      const x = eye.getBoundingClientRect().left + eye.style.width / 2;
-      const y = eye.getBoundingClientRect().top + eye.style.height / 2;
+    const callbackFn = (eye: HTMLDivElement) => {
+      const x = eye.getBoundingClientRect().left + Number(eye.style.width) / 2;
+      const y = eye.getBoundingClientRect().top + Number(eye.style.height) / 2;
 
       const radian = Math.atan2(event.pageX - x, event.pageY - y);
       const rotation = radian * (180 / Math.PI) * -1 + 270;
