@@ -19,6 +19,9 @@
 						<a href="/eyes">Eyes</a>
 					</li>
 					<li>
+						<a href="/typewriter">Typewriter</a>
+					</li>
+					<li>
 						<a href="/error">Error</a>
 					</li>
 				</ul>

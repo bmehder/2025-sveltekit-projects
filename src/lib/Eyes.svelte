@@ -1,12 +1,14 @@
 <script lang="ts">
-	const handleMousemove = (event: MouseEvent) => {
+	type MousePosition = { pageX: number; pageY: number }
+
+	const handleMousemove = ({ pageX, pageY }: MousePosition) => {
 		const eyes = document.querySelectorAll('.eye')
 
 		const callbackFn = (eye: HTMLDivElement) => {
 			const x = eye.getBoundingClientRect().left + Number(eye.style.width) / 2
 			const y = eye.getBoundingClientRect().top + Number(eye.style.height) / 2
 
-			const radian = Math.atan2(event.pageX - x, event.pageY - y)
+			const radian = Math.atan2(pageX - x, pageY - y)
 			const rotation = radian * (180 / Math.PI) * -1 + 270
 
 			eye.style.transform = `rotate(${rotation}deg)`
@@ -25,7 +27,7 @@
 
 <style>
 	.eyes-app {
-		min-height: 100dvh;
+		min-height: 80dvh;
 		display: grid;
 		place-items: center;
 		/* background-color: #2e7fbd; */
