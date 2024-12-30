@@ -22,6 +22,9 @@
 						<a href="/typewriter">Typewriter</a>
 					</li>
 					<li>
+						<a href="/store">Store</a>
+					</li>
+					<li>
 						<a href="/error">Error</a>
 					</li>
 				</ul>
