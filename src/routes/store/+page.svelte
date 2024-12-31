@@ -1,4 +1,6 @@
 <script>
+	import { fly } from 'svelte/transition'
+
 	// Data
 	const products = [
 		{
@@ -22,6 +24,11 @@
 	]
 
 	// Helpers functions
+	const formatter = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
+		minimumFractionDigits: 0,
+	})
 	const getProductById = id => products.find(product => product.id === id)
 	const getCartItemById = id => cartItems.find(cartItem => cartItem.id === id)
 	const getIndexOfCartItem = item => cartItems.indexOf(item)
@@ -69,10 +76,10 @@
 	<div class="outer">
 		<div class="inner flow">
 			<h2>Products</h2>
-			<ul class="products auto-fit">
+			<ul class="products flow">
 				{#each products as product}
-					<li>
-						<h3>{product.name} ${product.price}</h3>
+					<li class="spread-apart">
+						<h3>{product.name}: {formatter.format(product.price)}</h3>
 						<button onclick={() => handleAddToCart(product.id)}>Add to Cart</button>
 					</li>
 				{/each}
@@ -81,24 +88,35 @@
 	</div>
 </section>
 
-<section>
-	<div class="outer">
-		<div class="inner flow">
-			<h2>Cart</h2>
-			<ul class="cart">
-				{#each cartItems as cartItem}
+{#if cartItems.length > 0}
+	<section transition:fly={{ x: -800, duration: 300 }}>
+		<div class="outer">
+			<div class="inner flow">
+				<h2>Cart</h2>
+				<ul class="cart">
 					<li>
-						{cartItem.name}: ${cartItem.price}
-						<input type="number" bind:value={cartItem.quantity} />
-						${cartItem.price * cartItem.quantity}
-						<button onclick={() => handleRemoveCartItem(cartItem.id)}>X</button>
+						<span>Item</span>
+						<span>Price</span>
+						<span>Quantity</span>
+						<span>Item Total</span>
 					</li>
-				{/each}
-			</ul>
-			<div><strong>Total: ${total}</strong></div>
+					{#each cartItems as { name, id, price, quantity }, i}
+						{@const itemPrice = formatter.format(price)}
+						{@const itemTotal = formatter.format(price * quantity)}
+						<li>
+							<span>{name}:</span>
+							<span>{itemPrice}</span>
+							<input type="number" min="0" bind:value={cartItems[i].quantity} />
+							<span>{itemTotal}</span>
+							<button onclick={() => handleRemoveCartItem(id)}>X</button>
+						</li>
+					{/each}
+				</ul>
+				<div><strong>Total: {formatter.format(total)}</strong></div>
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
+{/if}
 
 <style>
 	ul {
@@ -106,6 +124,7 @@
 	}
 
 	input[type='number'] {
+		width: 8ch;
 		padding: 0.5rem;
 	}
 
@@ -113,21 +132,35 @@
 		padding: 0.5rem;
 	}
 
-	.products li {
-		display: grid;
-		justify-items: center;
-		gap: 0.5rem;
+	.products {
+		width: fit-content;
+
+		li {
+			gap: 3rem;
+		}
 	}
 
 	.cart {
 		display: grid;
-		gap: 0.5rem;
+		gap: 1rem;
 
 		li {
+			width: fit-content;
 			display: grid;
-			grid-template-columns: 8rem repeat(3, 6ch);
+			grid-template-columns: 6rem 4rem 6rem 6rem 1rem;
+			justify-items: start;
 			align-items: center;
-			gap: 0.5rem;
+			gap: 1rem;
+
+			&:first-child {
+				padding-bottom: 0.5rem;
+				font-weight: bold;
+				border-bottom: 1px solid;
+			}
+
+			button {
+				justify-self: end;
+			}
 		}
 	}
 </style>
