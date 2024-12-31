@@ -1,47 +1,31 @@
 <script>
-	import { fly } from 'svelte/transition'
+	import { fly, slide } from 'svelte/transition'
 
 	// Data
-	const products = [
-		{
-			id: 1,
-			name: 'Apples',
-			price: 1,
-			quantity: 1,
-		},
-		{
-			id: 2,
-			name: 'Bananas',
-			price: 2,
-			quantity: 1,
-		},
-		{
-			id: 3,
-			name: 'Oranges',
-			price: 3,
-			quantity: 1,
-		},
-	]
+	let { data } = $props()
 
-	// Helpers functions
-	const formatter = new Intl.NumberFormat('en-US', {
+	// Utilities
+	const formatter = new Intl.NumberFormat('en-GB', {
 		style: 'currency',
-		currency: 'USD',
+		currency: 'GBP',
 		minimumFractionDigits: 0,
 	})
-	const getProductById = id => products.find(product => product.id === id)
+
+	// Helper functions
+	const getProductById = id => data.products.find(product => product.id === id)
 	const getCartItemById = id => cartItems.find(cartItem => cartItem.id === id)
 	const getIndexOfCartItem = item => cartItems.indexOf(item)
-	const add = (acc, item) => acc + item.price * item.quantity
+	const cartItemsReducer = (acc, item) => acc + item.price * item.quantity
 
 	// State
 	const cartItems = $state([])
-	const total = $derived(cartItems.reduce(add, 0))
+	const total = $derived(cartItems.reduce(cartItemsReducer, 0))
 	const formattedTotal = $derived(formatter.format(total))
 
 	// Update state functions
 	const addToCart = item => cartItems.push(item)
 	const removeFromCart = index => cartItems.splice(index, 1)
+	const incrementQuantity = item => item.quantity++
 
 	// Event Handlers
 	function handleAddToCart(id) {
@@ -49,7 +33,7 @@
 		const item = getCartItemById(id)
 
 		if (cartItems.includes(item)) {
-			item.quantity++
+			incrementQuantity(item)
 		} else {
 			addToCart(product)
 		}
@@ -78,7 +62,7 @@
 		<div class="inner flow">
 			<h2>Products</h2>
 			<ul class="products flow">
-				{#each products as { id, name, price }}
+				{#each data.products as { id, name, price }}
 					{@const formattedPrice = formatter.format(price)}
 					<li class="spread-apart">
 						<h3>{name}: {formattedPrice}</h3>
@@ -95,7 +79,7 @@
 		<div class="outer">
 			<div class="inner flow">
 				<h2>Cart</h2>
-				<ul class="cart">
+				<ul class="cart flow">
 					<li>
 						<span>Item</span>
 						<span>Price</span>
@@ -105,7 +89,7 @@
 					{#each cartItems as { id, name, price, quantity }, i}
 						{@const formattedPrice = formatter.format(price)}
 						{@const formattedItemTotal = formatter.format(price * quantity)}
-						<li>
+						<li transition:slide>
 							<span>{name}:</span>
 							<span>{formattedPrice}</span>
 							<input type="number" min="0" bind:value={cartItems[i].quantity} />
@@ -134,6 +118,7 @@
 		padding: 0.5rem;
 	}
 
+	/* Semantic classes */
 	.products {
 		width: fit-content;
 
@@ -143,16 +128,13 @@
 	}
 
 	.cart {
-		display: grid;
-		gap: 1rem;
-
 		li {
 			width: fit-content;
 			display: grid;
-			grid-template-columns: 6rem 4rem 6rem 6rem 1rem;
+			grid-template-columns: repeat(4, 6rem) 1rem;
 			justify-items: start;
 			align-items: center;
-			gap: 1rem;
+			line-height: 1;
 
 			&:first-child {
 				padding-bottom: 0.5rem;
