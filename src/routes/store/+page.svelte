@@ -37,6 +37,7 @@
 	// State
 	const cartItems = $state([])
 	const total = $derived(cartItems.reduce(add, 0))
+	const formattedTotal = $derived(formatter.format(total))
 
 	// Update state functions
 	const addToCart = item => cartItems.push(item)
@@ -77,10 +78,11 @@
 		<div class="inner flow">
 			<h2>Products</h2>
 			<ul class="products flow">
-				{#each products as product}
+				{#each products as { id, name, price }}
+					{@const formattedPrice = formatter.format(price)}
 					<li class="spread-apart">
-						<h3>{product.name}: {formatter.format(product.price)}</h3>
-						<button onclick={() => handleAddToCart(product.id)}>Add to Cart</button>
+						<h3>{name}: {formattedPrice}</h3>
+						<button onclick={() => handleAddToCart(id)}>Add to Cart</button>
 					</li>
 				{/each}
 			</ul>
@@ -100,19 +102,19 @@
 						<span>Quantity</span>
 						<span>Item Total</span>
 					</li>
-					{#each cartItems as { name, id, price, quantity }, i}
-						{@const itemPrice = formatter.format(price)}
-						{@const itemTotal = formatter.format(price * quantity)}
+					{#each cartItems as { id, name, price, quantity }, i}
+						{@const formattedPrice = formatter.format(price)}
+						{@const formattedItemTotal = formatter.format(price * quantity)}
 						<li>
 							<span>{name}:</span>
-							<span>{itemPrice}</span>
+							<span>{formattedPrice}</span>
 							<input type="number" min="0" bind:value={cartItems[i].quantity} />
-							<span>{itemTotal}</span>
+							<span>{formattedItemTotal}</span>
 							<button onclick={() => handleRemoveCartItem(id)}>X</button>
 						</li>
 					{/each}
 				</ul>
-				<div><strong>Total: {formatter.format(total)}</strong></div>
+				<div><strong>Total: {formattedTotal}</strong></div>
 			</div>
 		</div>
 	</section>
