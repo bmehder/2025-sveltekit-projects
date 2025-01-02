@@ -4,28 +4,32 @@
 	// Data
 	let { data } = $props()
 
-	// Utilities
-	const formatter = new Intl.NumberFormat('en-GB', {
-		style: 'currency',
-		currency: 'GBP',
-		minimumFractionDigits: 0,
-	})
+	const GBP = [
+		'en-GB',
+		{
+			style: 'currency',
+			currency: 'GBP',
+			minimumFractionDigits: 0,
+		},
+	]
 
 	// Helper functions
 	const getProductById = id => data.products.find(product => product.id === id)
 	const getCartItemById = id => cartItems.find(cartItem => cartItem.id === id)
-	const getIndexOfCartItem = item => cartItems.indexOf(item)
-	const cartItemsReducer = (acc, item) => acc + item.price * item.quantity
+	const getCartItemIndex = item => cartItems.indexOf(item)
+
+	const cartItemsTotalReducer = (acc, item) => acc + item.price * item.quantity
+
+	const toGBP = n => new Intl.NumberFormat(...GBP).format(n)
 
 	// State
 	const cartItems = $state([])
-	const total = $derived(cartItems.reduce(cartItemsReducer, 0))
-	const formattedTotal = $derived(formatter.format(total))
+	const total = $derived(cartItems.reduce(cartItemsTotalReducer, 0))
 
 	// Update state functions
-	const addToCart = item => cartItems.push(item)
+	const addToCart = product => cartItems.push(product)
 	const removeFromCart = index => cartItems.splice(index, 1)
-	const incrementQuantity = item => item.quantity++
+	const incrementQuantity = cartItem => cartItem.quantity++
 
 	// Event Handlers
 	function handleAddToCart(id) {
@@ -41,7 +45,7 @@
 
 	function handleRemoveCartItem(id) {
 		const item = getCartItemById(id)
-		const index = getIndexOfCartItem(item)
+		const index = getCartItemIndex(item)
 
 		if (confirm('Are you sure you want to remove this item from the cart?')) {
 			removeFromCart(index)
@@ -62,11 +66,10 @@
 		<div class="inner flow">
 			<h2>Products</h2>
 			<ul class="products flow">
-				{#each data.products as { id, name, price }}
-					{@const formattedPrice = formatter.format(price)}
+				{#each data.products as product}
 					<li class="spread-apart">
-						<h3>{name}: {formattedPrice}</h3>
-						<button onclick={() => handleAddToCart(id)}>Add to Cart</button>
+						<h3>{product.name}: {toGBP(product.price)}</h3>
+						<button onclick={() => handleAddToCart(product.id)}>Add to Cart</button>
 					</li>
 				{/each}
 			</ul>
@@ -86,19 +89,17 @@
 						<span>Quantity</span>
 						<span>Item Total</span>
 					</li>
-					{#each cartItems as { id, name, price, quantity }, i}
-						{@const formattedPrice = formatter.format(price)}
-						{@const formattedItemTotal = formatter.format(price * quantity)}
+					{#each cartItems as cartItem}
 						<li transition:slide>
-							<span>{name}:</span>
-							<span>{formattedPrice}</span>
-							<input type="number" min="0" bind:value={cartItems[i].quantity} />
-							<span>{formattedItemTotal}</span>
-							<button onclick={() => handleRemoveCartItem(id)}>X</button>
+							<span>{cartItem.name}:</span>
+							<span>{toGBP(cartItem.price)}</span>
+							<input type="number" min="0" bind:value={cartItem.quantity} />
+							<span>{toGBP(cartItem.price * cartItem.quantity)}</span>
+							<button onclick={() => handleRemoveCartItem(cartItem.id)}>X</button>
 						</li>
 					{/each}
 				</ul>
-				<div><strong>Total: {formattedTotal}</strong></div>
+				<div><strong>Total: {toGBP(total)}</strong></div>
 			</div>
 		</div>
 	</section>
